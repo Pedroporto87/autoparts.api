@@ -1,24 +1,36 @@
 "use strict";
 
 export async function up(queryInterface, Sequelize) {
-  await queryInterface.createTable("users", {
+  await queryInterface.createTable("cart_items", {
     id: {
       type: Sequelize.INTEGER,
       autoIncrement: true,
       primaryKey: true,
     },
-    name: {
-      type: Sequelize.STRING,
+    userId: {
+      type: Sequelize.INTEGER,
       allowNull: false,
+      references: {
+        model: "users",
+        key: "id",
+      },
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     },
-    email: {
-      type: Sequelize.STRING,
+    productId: {
+      type: Sequelize.INTEGER,
       allowNull: false,
-      unique: true,
+      references: {
+        model: "products",
+        key: "id",
+      },
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     },
-    passwordHash: {
-      type: Sequelize.STRING,
+    quantity: {
+      type: Sequelize.INTEGER,
       allowNull: false,
+      defaultValue: 1,
     },
     createdAt: {
       type: Sequelize.DATE,
@@ -33,6 +45,6 @@ export async function up(queryInterface, Sequelize) {
   });
 }
 export async function down(queryInterface) {
-  await queryInterface.dropTable("users");
+  await queryInterface.dropTable("cart_items");
 }
 

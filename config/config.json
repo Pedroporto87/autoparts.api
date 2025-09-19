@@ -2,6 +2,7 @@
   "development": {
     "dialect": "sqlite",
     "storage": "./database.sqlite",
+    "type": "module",
     "logging": false
   },
   "test": {
