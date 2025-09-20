@@ -4,6 +4,9 @@ import dotenv from "dotenv";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import UserModel from "./Users.js";
+import ProductModel from "./Products.js";
+import CartItemModel from "./CartItem.js";
 
 dotenv.config();
 
@@ -24,4 +27,11 @@ export const sequelize = config.use_env_variable
       logging: config.logging || false,
     });
 
-export default sequelize;
+    const User = UserModel(sequelize);
+    const Product = ProductModel(sequelize);
+    const CartItem = CartItemModel(sequelize, User, Product);
+    
+    export { User, Product, CartItem };
+    export default sequelize;
+
+  
