@@ -9,6 +9,7 @@ export const auth = (req, res, next) => {
         req.user = { id: payload.id, email: payload.email };
         next();
     } catch (e) {
+        console.error('Error verifying token:', e.message); // Log the error for debugging
         return res.status(401).json({ success: false, message: "Token inválido" });
     }
 }
