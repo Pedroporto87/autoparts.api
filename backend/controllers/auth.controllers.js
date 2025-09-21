@@ -72,3 +72,7 @@ export const logout = async (_req, res) => {
     res.clearCookie("access_token", { path: "/" });
     return res.json({ success: true });
   };
+
+  export const me = async (req, res) => {
+    return res.json({ success: true, data: { id: req.user.id, email: req.user.email } });
+  };
