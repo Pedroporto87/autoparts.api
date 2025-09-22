@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useRef } from 'react';
 import api from '../api/client'
 
 type User = {
@@ -24,11 +24,15 @@ export const AuthContext = createContext<AuthCtx>({
 export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     const [user, setUser] = useState<User>(null);
     const [loading, setLoading] = useState(true);
+    const initialized = useRef(false);
 
     useEffect(() => {
+        if (initialized.current) return;
+        initialized.current = true;
+    
         (async () => {
           try {
-            const { data } = await api.get("/me");
+            const { data } = await api.get("/auth/me");
             setUser(data.data);
           } catch {
             setUser(null);
@@ -39,12 +43,12 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
       }, []);
 
       const login  = async (email: string, password: string) => {
-        const { data } = await api.post("/login", { email, password });
+        const { data } = await api.post("/auth/login", { email, password });
         setUser(data.data.user ?? data.data);
       }
 
       const logout = async () => {
-        await api.post("/logout");
+        await api.post("/auth/logout");
         setUser(null);
       }
 

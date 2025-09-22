@@ -1,35 +1,65 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter, Routes, Route, Navigate, Link } from "react-router-dom";
+import { AuthProvider } from "../contexts/AuthContext";
+import { useAuth } from "../hooks/useAuth";
+import Login from "../pages/Login";
+import Register  from "../pages/Register";
+import Products from "../pages/Products";
+import Cart from "../pages/Cart";
+import './index.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+
+
+function PrivateRoute({ children }: { children: JSX.Element }) {
+  const { user, loading } = useAuth();
+  if (loading) {
+    return <div>Carregando...</div>;
+  }
+  return user ? children : <Navigate to="/login" replace/>;
+}
+
+function Layout({ children }: { children: JSX.Element }) {
+  const { user, logout } = useAuth()
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div>
+      <nav className="nav">
+        <div className="left">
+          <Link to="/" className="brand">AutoParts</Link>
+          <Link to="/">Produtos</Link>
+          <Link to="/cart">Carrinho</Link>
+        </div>
+        <div className="right">
+        {user ? (
+            <>
+              <span className="muted">{user.email}</span>
+              <button onClick={logout}>Sair</button>
+            </>
+          ) : (
+            <>
+              <Link to="/login">Entrar</Link>
+              <Link to="/register">Cadastrar</Link>
+            </>
+          )}
+        </div>
+      </nav>
+      <main>{children}</main>
+    </div>
   )
 }
 
-export default App
+export default function App() {
+  return (
+    <AuthProvider>
+      <BrowserRouter>
+        <Layout>
+          <Routes>
+          <Route path="/" element={<Products />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/cart" element={<PrivateRoute><Cart /></PrivateRoute>} />
+          </Routes>
+        </Layout>
+      </BrowserRouter>
+    </AuthProvider>
+  )
+}
