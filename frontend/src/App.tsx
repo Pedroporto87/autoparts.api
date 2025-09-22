@@ -21,19 +21,19 @@ function Layout({ children }: { children: JSX.Element }) {
       <nav className="nav">
         <div className="left">
           <Link to="/" className="brand">AutoParts</Link>
-          <Link to="/">Produtos</Link>
-          <Link to="/cart">Carrinho</Link>
+          <Link to="/" className="brand-bottons">Produtos</Link>
+          <Link to="/cart" className="brand-bottons">Carrinho</Link>
         </div>
         <div className="right">
           {user ? (
             <>
-              <span className="muted">{user.email}</span>
-              <button onClick={logout}>Sair</button>
+              <span className="muted">Bem vindo, {user.name}</span>
+              <button className="primary" onClick={logout}>Sair</button>
             </>
           ) : (
             <>
-              <Link to="/login">Entrar</Link>
-              <Link to="/register">Cadastrar</Link>
+              <Link to="/login" className="brand-bottons">Entrar</Link>
+              <Link to="/register" className="brand-bottons">Cadastrar</Link>
             </>
           )}
         </div>
