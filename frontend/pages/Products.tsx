@@ -69,10 +69,10 @@ export default function Products() {
 
   return (
     <div className="page">
-      <h2>Produtos</h2>
+      <h2 className='products-h2'>Produtos</h2>
       <div className="searchbar">
         <input value={q} onChange={e=>setQ(e.target.value)} placeholder="Buscar por nome ou código" />
-        <button onClick={search}>Buscar</button>
+        <button onClick={search} className='primary'>Buscar</button>
       </div>
 
       <div className="grid">

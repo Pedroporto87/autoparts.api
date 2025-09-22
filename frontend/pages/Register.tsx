@@ -13,53 +13,38 @@ export default function Register(){
     const nav = useNavigate()
     const location = useLocation()
     const from = (location.state as any)?.from || "/"
-    const redirectTarget = typeof from === "string" && from !== "/register"
-    ? from
-    : "/";
+    // const redirectTarget = typeof from === "string" && from !== "/register"
+    // ? from
+    // : "/";
 
     const onSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setMsg("");
-        setLoading(true);
-      
-        try {
-          // 1) cria conta
-          await api.post("/auth/register", { name, email, password });
-      
-          // 2) auto-login (Set-Cookie: access_token)
-          const loginResp = await api.post("/auth/login", { email, password });
-          // (opcional) atualiza a UI com o user do login imediatamente
-          setUser(loginResp.data?.data?.user ?? loginResp.data?.data ?? null);
-      
-          // 3) aguarda 1 "tick" para o cookie ficar disponível no próximo XHR
-          await new Promise((r) => requestAnimationFrame(() => r(null)));
-      
-          // 4) confirma sessão com /auth/me (ESSENCIAL para suas permissões)
-          const meResp = await api.get("/auth/me", {
-            // evita que axios jogue erro automaticamente no 401/403
-            validateStatus: (s) => s < 500,
-          });
-      
-          if (meResp.status !== 200) {
-            setMsg("Não foi possível confirmar sua sessão. Verifique se os cookies estão habilitados.");
-            return; // não navega sem confirmar
-          }
-      
-          // 5) popula o contexto com os dados “oficiais” do /me
-          setUser(meResp.data?.data ?? null);
-      
-          // 6) navega para a lista de produtos
-          nav("/", { replace: true });
-      
-        } catch (e: any) {
-          setMsg(e?.response?.data?.message || "Erro ao cadastrar");
-        } finally {
-          setLoading(false);
+      e.preventDefault();
+      setMsg("");
+      setLoading(true);
+    
+      try {
+        await api.post("/auth/register", { name, email, password });
+    
+        const loginResp = await api.post("/auth/login", { email, password });
+        setUser(loginResp.data?.data?.user ?? loginResp.data?.data ?? null);
+    
+        await new Promise((r) => setTimeout(r, 0)); // 1 tick para cookie HttpOnly
+    
+        const meResp = await api.get("/auth/me", { validateStatus: () => true });
+        if (meResp.status !== 200) {
+          setMsg(meResp?.data?.message || "Não foi possível confirmar sua sessão.");
+          return;
         }
-      };
-      
-      
-      
+    
+        setUser(meResp.data?.data ?? null);
+        nav("/", { replace: true });
+      } catch (e: any) {
+        setMsg(e?.response?.data?.message || "Erro ao cadastrar");
+      } finally {
+        setLoading(false);
+      }
+    };
+    
 
   return (
     <div className="page">
@@ -92,6 +77,6 @@ export default function Register(){
     <p>Já tem conta? <Link to="/login" state={{ from }}>Entrar</Link></p>
   </div>
   )
-}
+};
 
 
