@@ -74,5 +74,13 @@ export const logout = async (_req, res) => {
   };
 
   export const me = async (req, res) => {
-    return res.json({ success: true, data: { id: req.user.id, email: req.user.email } });
+    try {
+      const user = await User.findByPk(req.user.id, { attributes: ["id", "email", "name"] });
+      if (!user) return res.status(401).json({ success: false, message: "Sessão inválida" });
+  
+      return res.json({ success: true, data: user });
+    } catch (e) {
+      console.error(e);
+      return res.status(500).json({ success: false, message: "Erro no /me" });
+    }
   };

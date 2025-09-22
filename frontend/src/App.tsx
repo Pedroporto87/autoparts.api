@@ -5,6 +5,8 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Products from "../pages/Products";
 import Cart from "../pages/Cart";
+import './index.css'
+
 
 
 function PrivateRoute({ children }: { children: JSX.Element }) {
@@ -12,7 +14,7 @@ function PrivateRoute({ children }: { children: JSX.Element }) {
   if (loading) {
     return <div>Carregando...</div>;
   }
-  return user ? children : <Navigate to="/login" />;
+  return user ? children : <Navigate to="/login" replace/>;
 }
 
 function Layout({ children }: { children: JSX.Element }) {
@@ -20,13 +22,13 @@ function Layout({ children }: { children: JSX.Element }) {
 
   return (
     <div>
-      <nav>
-        <div className="nav-left">
+      <nav className="nav">
+        <div className="left">
           <Link to="/">AutoParts</Link>
           <Link to="/">Produtos</Link>
           <Link to="/cart">Carrinho</Link>
         </div>
-        <div className="nav-right">
+        <div className="right">
         {user ? (
             <>
               <span className="muted">{user.email}</span>
