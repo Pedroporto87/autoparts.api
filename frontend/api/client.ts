@@ -10,9 +10,9 @@ api.interceptors.response.use(
     (error) => {
         if(error.response && error.response.status === 401) {
             const here = window.location.pathname;
-            if(here !== "/login" && here !== "/register" && here !== "/") {
-                window.location.href = `/login?redirect=${encodeURIComponent(here)}`;
-            }
+            if (!["/login", "/register", "/"].includes(here)) {
+                // window.location.href = "/login"; // deixe comentado por enquanto
+              }
         }
         return Promise.reject(error);
     }

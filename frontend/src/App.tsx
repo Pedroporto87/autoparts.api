@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate, Link } from "react-router-dom";
 import { AuthProvider } from "../contexts/AuthContext";
 import { useAuth } from "../hooks/useAuth";
 import Login from "../pages/Login";
-import Register from "../pages/Register";
+import Register  from "../pages/Register";
 import Products from "../pages/Products";
 import Cart from "../pages/Cart";
 import './index.css'
@@ -24,7 +24,7 @@ function Layout({ children }: { children: JSX.Element }) {
     <div>
       <nav className="nav">
         <div className="left">
-          <Link to="/">AutoParts</Link>
+          <Link to="/" className="brand">AutoParts</Link>
           <Link to="/">Produtos</Link>
           <Link to="/cart">Carrinho</Link>
         </div>

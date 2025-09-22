@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import api from '../api/client'
 import { useAuth } from '../hooks/useAuth'
+import "../src/index.css"
 
 type Product = {
     id: number;
